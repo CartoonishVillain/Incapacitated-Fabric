@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "incapacitated",
+  "version": "${version}",
+
+  "name": "Incapacitated",
+  "description": "Incapacitated allows players to be revived a small handful of times by other players before dying.",
+  "authors": [
+    "Cartoonish Villain"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "MIT",
+  "icon": "assets/incapacitated/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.cartoonishvillain.incapacitated.Incapacitated"
+    ]
+  },
+  "mixins": [
+    "incapacitated.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.17.x",
+    "java": ">=16"
+  }
+}
