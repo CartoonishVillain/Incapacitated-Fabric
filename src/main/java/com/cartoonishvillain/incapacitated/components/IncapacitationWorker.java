@@ -3,7 +3,9 @@ package com.cartoonishvillain.incapacitated.components;
 import com.cartoonishvillain.incapacitated.BleedOutDamage;
 import com.cartoonishvillain.incapacitated.Incapacitated;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static com.cartoonishvillain.incapacitated.components.ComponentStarter.PLAYERCOMPONENTINSTANCE;
 
@@ -37,10 +40,15 @@ public class IncapacitationWorker {
                 if(Incapacitated.config.config.GLOWING)
                     player.addEffect(new MobEffectInstance(MobEffects.GLOWING, Integer.MAX_VALUE, 0));
 
-                ArrayList<Player> playerEntities = (ArrayList<Player>) player.level.getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(50));
+                if(Incapacitated.config.config.GLOBALINCAPMESSAGES){
+                    broadcast(player.getServer(), new TextComponent(player.getScoreboardName() + " is incapacitated!"));
+                }
+                else {
+                    ArrayList<Player> playerEntities = (ArrayList<Player>) player.level.getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(50));
 
-                for(Player players : playerEntities) {
-                    players.displayClientMessage(new TextComponent(player.getScoreboardName() + " is incapacitated!"), false);
+                    for(Player players : playerEntities) {
+                        players.displayClientMessage(new TextComponent(player.getScoreboardName() + " is incapacitated!"), false);
+                    }
                 }
 
             }
@@ -136,5 +144,10 @@ public class IncapacitationWorker {
                     }
                 }else if(Incapacitated.ReviveFoods.contains(item.toString())) {h.setDownsUntilDeath(Incapacitated.config.config.DOWNCOUNT); h.setTicksUntilDeath(Incapacitated.config.config.DOWNTICKS);}
         }
+
+    }
+
+    private static void broadcast(MinecraftServer server, TextComponent translationTextComponent){
+        server.getPlayerList().broadcastMessage(translationTextComponent, ChatType.CHAT, UUID.randomUUID());
     }
 }
