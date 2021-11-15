@@ -29,8 +29,8 @@ public class Incapacitated implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LogManager.getLogger("incapacitated");
 	public static IncapacitationConfig config;
-	public static ArrayList<ResourceLocation> ReviveFoods;
-	public static ArrayList<ResourceLocation> HealingFoods;
+	public static ArrayList<String> ReviveFoods;
+	public static ArrayList<String> HealingFoods;
 
 	@Override
 	public void onInitialize() {
@@ -47,34 +47,34 @@ public class Incapacitated implements ModInitializer {
 		ServerPlayConnectionEvents.JOIN.register(JoinListener.getInstance());
 	}
 
-	private ArrayList<ResourceLocation> getFoodForReviving() {
+	private ArrayList<String> getFoodForReviving() {
 		final String FoodList = config.config.REVIVEFOODS;
 		String[] reviveFoods = FoodList.split(",");
-		ArrayList<ResourceLocation> reviveFoodList = new ArrayList<>();
+		ArrayList<String> reviveFoodList = new ArrayList<>();
 		try {
 			for(String string : reviveFoods){
-				ResourceLocation food = new ResourceLocation(string);
+				String food = new ResourceLocation(string).getPath();
 				reviveFoodList.add(food);
 			}
 		}catch(ResourceLocationException e){
 			Incapacitated.LOGGER.error("Incapacitation: Revive foods not parsed. Non [a-z0-9_.-] character in config! Using default...");
-			return new ArrayList<>(List.of(new ResourceLocation("enchanted_golden_apple")));
+			return new ArrayList<>(List.of("enchanted_golden_apple"));
 		}
 		return reviveFoodList;
 	}
 
-	private ArrayList<ResourceLocation> getFoodForHealing() {
+	private ArrayList<String> getFoodForHealing() {
 		final String FoodList = config.config.HEALINGFOODS;
 		String[] healFoods = FoodList.split(",");
-		ArrayList<ResourceLocation> healFoodList = new ArrayList<>();
+		ArrayList<String> healFoodList = new ArrayList<>();
 		try {
 			for(String string : healFoods){
-				ResourceLocation food = new ResourceLocation(string);
+				String food = new ResourceLocation(string).getPath();
 				healFoodList.add(food);
 			}
 		}catch(ResourceLocationException e){
 			Incapacitated.LOGGER.error("Incapacitation: Healing foods not parsed. Non [a-z0-9_.-] character in config! Using default...");
-			return new ArrayList<>(List.of(new ResourceLocation("golden_apple")));
+			return new ArrayList<>(List.of("golden_apple"));
 		}
 		return healFoodList;
 	}

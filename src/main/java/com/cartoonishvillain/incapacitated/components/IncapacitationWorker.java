@@ -9,8 +9,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -113,5 +116,25 @@ public class IncapacitationWorker {
             return;
         }
         h.setJumpDelay(20);
+    }
+
+    public static void eat(LivingEntity entity, ItemStack itemStack){
+        if(entity instanceof Player player && !entity.level.isClientSide()){
+            Item item = itemStack.getItem();
+            PlayerComponent h = PLAYERCOMPONENTINSTANCE.get(player);
+                if(Incapacitated.HealingFoods.contains(item.toString())) {h.setDownsUntilDeath(Incapacitated.config.config.DOWNCOUNT); h.setTicksUntilDeath(Incapacitated.config.config.DOWNTICKS);}
+                if(h.getIsIncapacitated()){
+                    if(Incapacitated.ReviveFoods.contains(item.toString())){
+                        h.setIsIncapacitated(false);
+                        h.setReviveCount(Incapacitated.config.config.REVIVETICKS);
+                        h.resetGiveUpJumps();
+                        h.setDownsUntilDeath(Incapacitated.config.config.DOWNCOUNT);
+                        player.removeEffect(MobEffects.GLOWING);
+                        h.setTicksUntilDeath(Incapacitated.config.config.DOWNTICKS);
+                        player.setHealth(player.getMaxHealth()/3f);
+                        player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_PLING, SoundSource.PLAYERS, 1, 1);
+                    }
+                }else if(Incapacitated.ReviveFoods.contains(item.toString())) {h.setDownsUntilDeath(Incapacitated.config.config.DOWNCOUNT); h.setTicksUntilDeath(Incapacitated.config.config.DOWNTICKS);}
+        }
     }
 }
