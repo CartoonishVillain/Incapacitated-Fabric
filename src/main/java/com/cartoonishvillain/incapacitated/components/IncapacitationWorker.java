@@ -26,7 +26,7 @@ public class IncapacitationWorker {
     public static void deathEvent(DamageSource damageSource, Player player, CallbackInfo ci){
         PlayerComponent h = PLAYERCOMPONENTINSTANCE.get(player);
         //if the player is not already incapacitated
-        if (!h.getIsIncapacitated()) {
+        if (!h.getIsIncapacitated() && !(Incapacitated.config.config.SOMEINSTANTKILLS && Incapacitated.instantKillDamageSourcesMessageID.contains(damageSource.getMsgId()))){
             //reduce downs until death
             h.setDownsUntilDeath(h.getDownsUntilDeath() - 1);
             //if downs until death is 0 or higher, we can cancel the death event because the user is down.

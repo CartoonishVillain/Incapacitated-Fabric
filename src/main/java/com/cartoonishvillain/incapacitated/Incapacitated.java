@@ -15,6 +15,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.damagesource.DamageSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +32,7 @@ public class Incapacitated implements ModInitializer {
 	public static IncapacitationConfig config;
 	public static ArrayList<String> ReviveFoods;
 	public static ArrayList<String> HealingFoods;
+	public static ArrayList<String> instantKillDamageSourcesMessageID;
 
 	@Override
 	public void onInitialize() {
@@ -40,6 +42,8 @@ public class Incapacitated implements ModInitializer {
 
 		AutoConfig.register(IncapacitationConfig.class, JanksonConfigSerializer::new);
 		config = AutoConfig.getConfigHolder(IncapacitationConfig.class).getConfig();
+
+		instantKillDamageSourcesMessageID = new ArrayList<>(List.of("bleedout", DamageSource.OUT_OF_WORLD.msgId, DamageSource.LAVA.msgId, DamageSource.WITHER.msgId));
 
 		ReviveFoods = getFoodForReviving();
 		HealingFoods = getFoodForHealing();

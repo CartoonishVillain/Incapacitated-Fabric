@@ -26,5 +26,9 @@ public class IncapacitationConfig implements ConfigData {
         public boolean GLOWING = true;
         @Comment("Are downed players invincible?")
         public boolean INVINCIBLEDOWN = false;
+        @Comment("Do some damage types like Lava down players, or instantly kill?")
+        public boolean SOMEINSTANTKILLS = true;
+        @Comment("Are incapacitation messsages globally sent")
+        public boolean GLOBALINCAPMESSAGES = true;
     }
 }
