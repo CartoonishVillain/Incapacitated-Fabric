@@ -1,16 +1,26 @@
 package com.cartoonishvillain.incapacitated;
 
+import com.cartoonishvillain.incapacitated.components.IncapacitationWorker;
+import com.cartoonishvillain.incapacitated.components.PlayerComponent;
 import com.cartoonishvillain.incapacitated.config.IncapacitationConfig;
+import io.netty.buffer.Unpooled;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.cartoonishvillain.incapacitated.components.ComponentStarter.PLAYERCOMPONENTINSTANCE;
 
 public class Incapacitated implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -33,6 +43,7 @@ public class Incapacitated implements ModInitializer {
 		ReviveFoods = getFoodForReviving();
 		HealingFoods = getFoodForHealing();
 
+		ServerPlayConnectionEvents.JOIN.register(JoinListener.getInstance());
 	}
 
 	private ArrayList<ResourceLocation> getFoodForReviving() {
@@ -65,5 +76,16 @@ public class Incapacitated implements ModInitializer {
 			return new ArrayList<>(List.of(new ResourceLocation("golden_apple")));
 		}
 		return healFoodList;
+	}
+
+	public static class JoinListener implements ServerPlayConnectionEvents.Join{
+		private static final JoinListener INSTANCE = new JoinListener();
+		@Override
+		public void onPlayReady(ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) {
+			PlayerComponent playerComponent = PLAYERCOMPONENTINSTANCE.get(handler.player);
+			playerComponent.sync();
+		}
+		public static JoinListener getInstance() {return INSTANCE;}
+
 	}
 }

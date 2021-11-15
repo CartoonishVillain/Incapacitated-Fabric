@@ -4,6 +4,11 @@
   "package": "com.cartoonishvillain.incapacitated.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "DamageSourceInvoker",
+    "LocalPlayerTickMixin",
+    "PlayerDeathMixin",
+    "PlayerMixin",
+    "ServerPlayerTickMixin"
   ],
   "client": [
   ],

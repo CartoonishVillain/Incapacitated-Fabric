@@ -3,6 +3,12 @@
   "id": "incapacitated",
   "version": "${version}",
 
+  "custom": {
+    "cardinal-components": [
+      "incapacitation:incapdata"
+    ]
+  },
+
   "name": "Incapacitated",
   "description": "Incapacitated allows players to be revived a small handful of times by other players before dying.",
   "authors": [
@@ -20,6 +26,9 @@
   "entrypoints": {
     "main": [
       "com.cartoonishvillain.incapacitated.Incapacitated"
+    ],
+    "cardinal-components-entity": [
+      "com.cartoonishvillain.incapacitated.components.ComponentStarter"
     ]
   },
   "mixins": [
