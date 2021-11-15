@@ -12,6 +12,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 
@@ -45,11 +46,10 @@ public class IncapacitationWorker {
 
     public static void tick(Player player){
         PlayerComponent h = PLAYERCOMPONENTINSTANCE.get(player);
-//        if(h.getIsIncapacitated()){
-//            player.setPose(Pose.SWIMMING);
-//        }
 
         if(!player.level.isClientSide() && h.getIsIncapacitated()){
+            if(h.getJumpDelay() > 0){h.setJumpDelay(h.getJumpDelay()-1);}
+            else if(h.getJumpDelay() < 0){h.setJumpDelay(0);}
             ArrayList<Player> playerEntities = (ArrayList<Player>) player.level.getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(3));
             boolean reviving = false;
 
@@ -105,5 +105,13 @@ public class IncapacitationWorker {
                 player.removeEffect(MobEffects.GLOWING);
             }
         }
+    }
+    public static void hurt(Player player, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir){
+        PlayerComponent h = PLAYERCOMPONENTINSTANCE.get(player);
+        if(h.getIsIncapacitated() && Incapacitated.config.config.INVINCIBLEDOWN && !damageSource.getMsgId().equals("bleedout")){
+            cir.cancel();
+            return;
+        }
+        h.setJumpDelay(20);
     }
 }

@@ -6,6 +6,7 @@ import com.cartoonishvillain.incapacitated.config.IncapacitationConfig;
 import io.netty.buffer.Unpooled;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -37,7 +38,7 @@ public class Incapacitated implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
-		AutoConfig.register(IncapacitationConfig.class, GsonConfigSerializer::new);
+		AutoConfig.register(IncapacitationConfig.class, JanksonConfigSerializer::new);
 		config = AutoConfig.getConfigHolder(IncapacitationConfig.class).getConfig();
 
 		ReviveFoods = getFoodForReviving();
