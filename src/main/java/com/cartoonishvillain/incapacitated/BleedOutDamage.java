@@ -11,6 +11,6 @@ public class BleedOutDamage extends DamageSource {
         super(p_i1566_1_);
     }
     public static DamageSource playerOutOfTime(Entity entity){
-        return ((DamageSourceInvoker) new EntityDamageSource("bleedout", entity)).invokeBypassArmor();
+        return ((DamageSourceInvoker) new EntityDamageSource("bleedout", entity)).IncapacitatedInvokeBypassArmor();
     }
 }

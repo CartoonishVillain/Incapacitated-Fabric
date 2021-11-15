@@ -58,7 +58,7 @@ public class IncapacitationWorker {
                 PlayerComponent y = PLAYERCOMPONENTINSTANCE.get(players);
                 if (players.isCrouching() && !y.getIsIncapacitated()) {
                     reviving = true;
-                    revivingPlayer = player;
+                    revivingPlayer = players;
                     break;
                 }
             }
@@ -73,8 +73,8 @@ public class IncapacitationWorker {
                     player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_PLING, SoundSource.PLAYERS, 1, 1);
 
                 }else{
-                    player.displayClientMessage(new TextComponent("You are being revived! " + (float)h.getReviveCount()/20f + " seconds..").withStyle(ChatFormatting.GREEN), true);
-                    revivingPlayer.displayClientMessage(new TextComponent("Reviving " + player.getScoreboardName() + " " + (float)h.getReviveCount()/20f + " seconds...").withStyle(ChatFormatting.GREEN), true);
+                    player.displayClientMessage(new TextComponent("You are being revived! " + (int)(h.getReviveCount()/20) + " seconds..").withStyle(ChatFormatting.GREEN), true);
+                    revivingPlayer.displayClientMessage(new TextComponent("Reviving " + player.getScoreboardName() + " " + (int)(h.getReviveCount()/20) + " seconds...").withStyle(ChatFormatting.GREEN), true);
                 }
             }
             else {
