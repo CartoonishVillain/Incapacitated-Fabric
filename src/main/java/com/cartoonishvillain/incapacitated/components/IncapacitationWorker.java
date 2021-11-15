@@ -93,4 +93,17 @@ public class IncapacitationWorker {
         }
 
     }
+
+    public static void jump(Player player){
+        PlayerComponent h = PLAYERCOMPONENTINSTANCE.get(player);
+        if(h.getIsIncapacitated() && h.getJumpDelay() == 0){
+            if(h.giveUpJumpCount()){
+                player.hurt(BleedOutDamage.playerOutOfTime(player), player.getMaxHealth() * 10);
+                h.setReviveCount(Incapacitated.config.config.DOWNCOUNT);
+                h.resetGiveUpJumps();
+                h.setIsIncapacitated(false);
+                player.removeEffect(MobEffects.GLOWING);
+            }
+        }
+    }
 }
