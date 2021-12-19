@@ -84,17 +84,16 @@ public class IncapacitationWorker {
                     player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_PLING, SoundSource.PLAYERS, 1, 1);
 
                 }else{
-                    player.displayClientMessage(new TextComponent("You are being revived! " + (int)(h.getReviveCount()/20) + " seconds..").withStyle(ChatFormatting.GREEN), true);
+                    player.displayClientMessage(new TextComponent("You are being revived! " + (h.getReviveCount()/20) + " seconds..").withStyle(ChatFormatting.GREEN), true);
                     revivingPlayer.displayClientMessage(new TextComponent("Reviving " + player.getScoreboardName() + " " + (int)(h.getReviveCount()/20) + " seconds...").withStyle(ChatFormatting.GREEN), true);
                 }
             }
             else {
                 if (h.countTicksUntilDeath()) {
                     player.hurt(BleedOutDamage.playerOutOfTime(player), player.getMaxHealth() * 10);
-                    h.setReviveCount(Incapacitated.config.config.REVIVETICKS);
+                    //if something is trying to keep them from dying at this point, kill them again.
+                    player.kill();
                     h.resetGiveUpJumps();
-                    player.removeEffect(MobEffects.GLOWING);
-                    h.setIsIncapacitated(false);
                 } else if (h.getTicksUntilDeath() % 20 == 0) {
                     player.displayClientMessage(new TextComponent("Incapacitated! Call for help or jump " + h.getJumpCount() + " times to give up! " + ((float) h.getTicksUntilDeath() / 20f) + " seconds left!").withStyle(ChatFormatting.RED), true);
                 }
@@ -110,9 +109,9 @@ public class IncapacitationWorker {
         if(h.getIsIncapacitated() && h.getJumpDelay() == 0){
             if(h.giveUpJumpCount()){
                 player.hurt(BleedOutDamage.playerOutOfTime(player), player.getMaxHealth() * 10);
-                h.setReviveCount(Incapacitated.config.config.DOWNCOUNT);
+                //if something tries to revive them, kill them again. No free passes.
+                player.kill();
                 h.resetGiveUpJumps();
-                h.setIsIncapacitated(false);
                 player.removeEffect(MobEffects.GLOWING);
             }
         }
