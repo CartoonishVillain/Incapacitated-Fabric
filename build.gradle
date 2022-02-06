@@ -34,10 +34,10 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:4.0.0"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:4.0.0"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:4.0.0"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:4.0.0"
+	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.1"
+	include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:4.1.1"
+	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.1"
+	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:4.1.1"
 
 	modApi("me.shedaniel.cloth:cloth-config-fabric:6.0.42") {
 		exclude(group: "net.fabricmc.fabric-api")
