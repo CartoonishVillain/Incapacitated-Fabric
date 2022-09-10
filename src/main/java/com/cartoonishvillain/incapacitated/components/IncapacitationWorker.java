@@ -1,10 +1,9 @@
 package com.cartoonishvillain.incapacitated.components;
 
-import com.cartoonishvillain.incapacitated.BleedOutDamage;
 import com.cartoonishvillain.incapacitated.Incapacitated;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,7 +11,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,13 +40,13 @@ public class IncapacitationWorker {
                     player.addEffect(new MobEffectInstance(MobEffects.GLOWING, Integer.MAX_VALUE, 0));
 
                 if(Incapacitated.config.config.GLOBALINCAPMESSAGES){
-                    broadcast(player.getServer(), new TextComponent(player.getScoreboardName() + " is incapacitated!"));
+                    broadcast(player.getServer(), Component.literal(player.getScoreboardName() + " is incapacitated!"));
                 }
                 else {
                     ArrayList<Player> playerEntities = (ArrayList<Player>) player.level.getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(50));
 
                     for(Player players : playerEntities) {
-                        players.displayClientMessage(new TextComponent(player.getScoreboardName() + " is incapacitated!"), false);
+                        players.displayClientMessage(Component.literal(player.getScoreboardName() + " is incapacitated!"), false);
                     }
                 }
 
@@ -85,8 +83,8 @@ public class IncapacitationWorker {
                     player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.NOTE_BLOCK_PLING, SoundSource.PLAYERS, 1, 1);
 
                 }else{
-                    player.displayClientMessage(new TextComponent("You are being revived! " + (h.getReviveCount()/20) + " seconds..").withStyle(ChatFormatting.GREEN), true);
-                    revivingPlayer.displayClientMessage(new TextComponent("Reviving " + player.getScoreboardName() + " " + (int)(h.getReviveCount()/20) + " seconds...").withStyle(ChatFormatting.GREEN), true);
+                    player.displayClientMessage(Component.literal("You are being revived! " + (h.getReviveCount() / 20) + " seconds..").withStyle(ChatFormatting.GREEN), true);
+                    revivingPlayer.displayClientMessage(Component.literal("Reviving " + player.getScoreboardName() + " " + (int) (h.getReviveCount() / 20) + " seconds...").withStyle(ChatFormatting.GREEN), true);
                 }
             }
             else {
@@ -96,7 +94,7 @@ public class IncapacitationWorker {
                     player.kill();
                     h.resetGiveUpJumps();
                 } else if (h.getTicksUntilDeath() % 20 == 0) {
-                    player.displayClientMessage(new TextComponent("Incapacitated! Call for help or jump " + h.getJumpCount() + " times to give up! " + ((float) h.getTicksUntilDeath() / 20f) + " seconds left!").withStyle(ChatFormatting.RED), true);
+                    player.displayClientMessage(Component.literal("Incapacitated! Call for help or jump " + h.getJumpCount() + " times to give up! " + ((float) h.getTicksUntilDeath() / 20f) + " seconds left!").withStyle(ChatFormatting.RED), true);
                 }
 
                 if(h.getReviveCount() != Incapacitated.config.config.REVIVETICKS) h.setReviveCount(Incapacitated.config.config.REVIVETICKS);
@@ -147,7 +145,7 @@ public class IncapacitationWorker {
 
     }
 
-    private static void broadcast(MinecraftServer server, TextComponent translationTextComponent){
-        server.getPlayerList().broadcastMessage(translationTextComponent, ChatType.CHAT, UUID.randomUUID());
+    private static void broadcast(MinecraftServer server, Component translationTextComponent){
+        server.getPlayerList().broadcastSystemMessage(translationTextComponent, false);
     }
 }
