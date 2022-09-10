@@ -1,12 +1,16 @@
 package com.cartoonishvillain.incapacitated.components;
 
 
+import com.cartoonishvillain.incapacitated.BleedOutDamage;
 import com.cartoonishvillain.incapacitated.Incapacitated;
+import com.cartoonishvillain.incapacitated.mixin.DamageSourceInvoker;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
 
 public class PlayerComponent implements ComponentV3, AutoSyncedComponent {
     private final Object provider;
@@ -16,6 +20,8 @@ public class PlayerComponent implements ComponentV3, AutoSyncedComponent {
     protected int giveUpJumps = 3;
     protected int reviveCounter = Incapacitated.config.config.REVIVETICKS;
     protected int jumpDelay = 0;
+
+    private DamageSource originalSource;
 
     public PlayerComponent(Object provider){this.provider = provider;}
 
@@ -94,6 +100,16 @@ public class PlayerComponent implements ComponentV3, AutoSyncedComponent {
     public void countDelay() {
         if(jumpDelay > 0) jumpDelay--;
         else if(jumpDelay < 0) jumpDelay = 0;
+    }
+
+    public DamageSource getSourceOfDeath() {
+        return originalSource != null
+                ? ((DamageSourceInvoker) originalSource).IncapacitatedInvokeBypassArmor()
+                : ((DamageSourceInvoker) new BleedOutDamage(DamageSource.OUT_OF_WORLD)).IncapacitatedInvokeBypassArmor();
+    }
+
+    public void setSourceOfDeath(DamageSource causeOfDeath) {
+        originalSource = new BleedOutDamage(causeOfDeath);
     }
 
     @Override

@@ -35,6 +35,7 @@ public class IncapacitationWorker {
             //if downs until death is 0 or higher, we can cancel the death event because the user is down.
             if (h.getDownsUntilDeath() > -1) {
                 h.setIsIncapacitated(true);
+                h.setSourceOfDeath(damageSource);
                 ci.cancel();
                 player.setHealth(player.getMaxHealth());
                 if(Incapacitated.config.config.GLOWING)
@@ -90,7 +91,7 @@ public class IncapacitationWorker {
             }
             else {
                 if (h.countTicksUntilDeath()) {
-                    player.hurt(BleedOutDamage.playerOutOfTime(player), player.getMaxHealth() * 10);
+                    player.hurt(h.getSourceOfDeath(), player.getMaxHealth() * 10);
                     //if something is trying to keep them from dying at this point, kill them again.
                     player.kill();
                     h.resetGiveUpJumps();
@@ -108,7 +109,7 @@ public class IncapacitationWorker {
         PlayerComponent h = PLAYERCOMPONENTINSTANCE.get(player);
         if(h.getIsIncapacitated() && h.getJumpDelay() == 0){
             if(h.giveUpJumpCount()){
-                player.hurt(BleedOutDamage.playerOutOfTime(player), player.getMaxHealth() * 10);
+                player.hurt(h.getSourceOfDeath(), player.getMaxHealth() * 10);
                 //if something tries to revive them, kill them again. No free passes.
                 player.kill();
                 h.resetGiveUpJumps();
